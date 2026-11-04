@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '../core/l10n.dart';
+import '../core/app_image.dart';
 import 'package:provider/provider.dart';
 
 import '../core/animations.dart';
@@ -39,11 +41,11 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   Center(
                     child: Hero(
                       tag: 'product-${p.id}',
-                      child: Material(type: MaterialType.transparency, child: Text(p.emoji, style: const TextStyle(fontSize: 130))),
+                      child: Material(type: MaterialType.transparency, child: ProductImage(p, size: 210)),
                     ),
                   ),
-                  Positioned(left: 8, top: 4, child: IconButton(icon: const Icon(Icons.arrow_back_ios_new, size: 20), onPressed: () => Navigator.pop(context))),
-                  Positioned(right: 12, top: 8, child: HeartButton(active: fav, size: 26, onTap: () => state.toggleFavorite(p.id))),
+                  PositionedDirectional(start: 8, top: 4, child: IconButton(icon: const Icon(Icons.arrow_back_ios_new, size: 20), onPressed: () => Navigator.pop(context))),
+                  PositionedDirectional(end: 12, top: 8, child: HeartButton(active: fav, size: 26, onTap: () => state.toggleFavorite(p.id))),
                 ],
               ),
             ),
@@ -55,9 +57,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(p.name, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w700)),
+                    Text(p.nameIn(context), style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w700)),
                     const SizedBox(height: 4),
-                    Text(p.weight, style: TextStyle(color: pal.subtext)),
+                    Text(p.weightIn(context), style: TextStyle(color: pal.subtext)),
                     const SizedBox(height: 18),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -69,8 +71,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           child: Text.rich(
                             key: ValueKey(_qty),
                             TextSpan(children: [
-                              TextSpan(text: money(p.price * _qty), style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w700)),
-                              TextSpan(text: '  ${money(p.oldPrice * _qty)}', style: TextStyle(fontSize: 13, color: pal.subtext, decoration: TextDecoration.lineThrough)),
+                              TextSpan(text: money(context, p.price * _qty), style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w700)),
+                              TextSpan(text: '  ${money(context, p.oldPrice * _qty)}', style: TextStyle(fontSize: 13, color: pal.subtext, decoration: TextDecoration.lineThrough)),
                             ]),
                           ),
                         ),
@@ -86,14 +88,14 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                           decoration: BoxDecoration(color: pal.primarySoft, borderRadius: BorderRadius.circular(8)),
-                          child: Text('${p.discountPercent}% OFF', style: const TextStyle(color: AppColors.primary, fontWeight: FontWeight.w600, fontSize: 12)),
+                          child: Text(context.tr('{n}% OFF', {'n': '${p.discountPercent}'}), style: const TextStyle(color: AppColors.primary, fontWeight: FontWeight.w600, fontSize: 12)),
                         ),
                       ],
                     ),
                     const SizedBox(height: 16),
-                    const Text('Product Detail', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
+                    const Tr('Product Detail', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
                     const SizedBox(height: 8),
-                    Text(p.description, style: TextStyle(color: pal.subtext, height: 1.6, fontSize: 13)),
+                    Text(p.descriptionIn(context), style: TextStyle(color: pal.subtext, height: 1.6, fontSize: 13)),
                   ],
                 ),
               ),
@@ -108,7 +110,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 icon: Icons.shopping_bag_outlined,
                 onPressed: () {
                   state.addToCart(p, qty: _qty);
-                  context.snack('Added $_qty × ${p.name}');
+                  context.snack(context.tr('Added {n} × {name}', {'n': '$_qty', 'name': p.nameIn(context)}));
                   Navigator.pop(context);
                 },
               ),

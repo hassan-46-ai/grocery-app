@@ -1,6 +1,9 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import '../core/l10n.dart';
+import '../core/app_image.dart';
+import '../data/models.dart';
 import 'package:provider/provider.dart';
 
 import '../core/animations.dart';
@@ -69,13 +72,13 @@ class _SuccessCard extends StatelessWidget {
               const SizedBox(height: 22),
               const Reveal(
                 index: 2,
-                child: Text('Order Placed\nSuccessfully',
+                child: Tr('Order Placed\nSuccessfully',
                     textAlign: TextAlign.center, style: TextStyle(fontSize: 21, fontWeight: FontWeight.w700, height: 1.25)),
               ),
               const SizedBox(height: 10),
               Reveal(
                 index: 3,
-                child: Text('You have successfully made order', style: TextStyle(fontSize: 12.5, color: pal.subtext)),
+                child: Tr('You have successfully made order', style: TextStyle(fontSize: 12.5, color: pal.subtext)),
               ),
               const SizedBox(height: 22),
               Reveal(

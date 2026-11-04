@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import '../core/l10n.dart';
+import '../core/app_image.dart';
+import '../data/models.dart';
+import '../widgets/language_widgets.dart';
 import 'package:provider/provider.dart';
 
 import '../core/animations.dart';
@@ -28,6 +32,16 @@ class ProfileScreen extends StatelessWidget {
       _Item(Icons.credit_card_outlined, 'Payment Method', onTap: () => context.push(const PaymentMethodScreen())),
       _Item(Icons.inventory_2_outlined, 'My Orders', onTap: () => context.push(const OrdersScreen())),
       _Item(
+        Icons.language,
+        'Language',
+        trailing: Row(mainAxisSize: MainAxisSize.min, children: [
+          Text(context.isAr ? 'العربية' : 'English', style: TextStyle(color: context.pal.subtext, fontSize: 12)),
+          const SizedBox(width: 4),
+          const Icon(Icons.chevron_right, size: 22),
+        ]),
+        onTap: () => showLanguageSheet(context),
+      ),
+      _Item(
         Icons.dark_mode_outlined,
         'Dark Mode',
         trailing: Switch(value: isDark, onChanged: (v) => s.setThemeMode(v ? ThemeMode.dark : ThemeMode.light)),
@@ -47,12 +61,12 @@ class ProfileScreen extends StatelessWidget {
             padding: EdgeInsets.fromLTRB(20, MediaQuery.of(context).padding.top + 14, 20, 28),
             decoration: const BoxDecoration(
               color: AppColors.primary,
-              borderRadius: BorderRadius.only(bottomLeft: Radius.circular(36), bottomRight: Radius.circular(14)),
+              borderRadius: BorderRadiusDirectional.only(bottomStart: Radius.circular(36), bottomEnd: Radius.circular(14)),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Center(child: Text('My Profile', style: TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w700))),
+                const Center(child: Tr('My Profile', style: TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w700))),
                 const SizedBox(height: 20),
                 Row(
                   children: [
@@ -155,7 +169,7 @@ class _Item extends StatelessWidget {
               children: [
                 Icon(icon, size: 22),
                 const SizedBox(width: 14),
-                Expanded(child: Text(title, style: const TextStyle(fontSize: 13.5))),
+                Expanded(child: Tr(title, style: const TextStyle(fontSize: 13.5))),
                 trailing ?? const Icon(Icons.chevron_right, size: 22),
               ],
             ),

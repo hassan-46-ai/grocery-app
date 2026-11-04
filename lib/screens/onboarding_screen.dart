@@ -1,6 +1,10 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import '../core/l10n.dart';
+import '../core/app_image.dart';
+import '../data/models.dart';
+import '../widgets/language_widgets.dart';
 import 'package:provider/provider.dart';
 
 import '../core/animations.dart';
@@ -70,14 +74,19 @@ class _OnboardingScreenState extends State<OnboardingScreen> with SingleTickerPr
             onPageChanged: (i) => setState(() => _index = i),
             itemBuilder: (_, i) => _Illustration(data: _pages[i], index: i, controller: _controller, float: _float),
           ),
-          Positioned(
+          PositionedDirectional(
             top: media.padding.top + 12,
-            right: 20,
+            start: 20,
+            child: const LangToggle(),
+          ),
+          PositionedDirectional(
+            top: media.padding.top + 12,
+            end: 20,
             child: TapScale(
               onTap: _finish,
               child: Row(
                 children: [
-                  const Text('Skip', style: TextStyle(color: AppColors.primary, fontSize: 13)),
+                  const Tr('Skip', style: TextStyle(color: AppColors.primary, fontSize: 13)),
                   const SizedBox(width: 6),
                   Container(
                     width: 26,
@@ -133,9 +142,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> with SingleTickerPr
                         child: Column(
                           key: ValueKey(_index),
                           children: [
-                            Text(page.title, textAlign: TextAlign.center, style: const TextStyle(fontSize: 21, fontWeight: FontWeight.w700, height: 1.3)),
+                            Tr(page.title, textAlign: TextAlign.center, style: const TextStyle(fontSize: 21, fontWeight: FontWeight.w700, height: 1.3)),
                             const SizedBox(height: 12),
-                            Text(page.body, textAlign: TextAlign.center, style: TextStyle(fontSize: 11.5, color: pal.subtext, height: 1.5)),
+                            Tr(page.body, textAlign: TextAlign.center, style: TextStyle(fontSize: 11.5, color: pal.subtext, height: 1.5)),
                           ],
                         ),
                       ),
@@ -192,7 +201,7 @@ class _Illustration extends StatelessWidget {
         return Opacity(
           opacity: fade,
           child: Transform.translate(
-            offset: Offset(delta * 80, 0),
+            offset: Offset(delta * 80 * (Directionality.of(context) == TextDirection.rtl ? -1 : 1), 0),
             child: Align(
               alignment: const Alignment(0, -0.55),
               child: SizedBox(
@@ -208,7 +217,7 @@ class _Illustration extends StatelessWidget {
                     ),
                     Transform.translate(
                       offset: Offset(0, math.sin(float.value * 2 * math.pi) * 6),
-                      child: Text(data.emoji, style: const TextStyle(fontSize: 120)),
+                      child: EmojiImage(folder: 'onboarding', name: '${index + 1}', emoji: data.emoji, size: 190),
                     ),
                     for (var i = 0; i < data.accents.length; i++)
                       Align(

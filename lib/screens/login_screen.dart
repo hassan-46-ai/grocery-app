@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import '../core/l10n.dart';
+import '../core/app_image.dart';
+import '../data/models.dart';
+import '../widgets/language_widgets.dart';
 import 'package:provider/provider.dart';
 
 import '../core/animations.dart';
@@ -47,16 +51,18 @@ class _LoginScreenState extends State<LoginScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
+                const Align(alignment: AlignmentDirectional.centerEnd, child: LangToggle()),
+                const SizedBox(height: 8),
                 const Reveal(index: 0, child: Center(child: AppLogo(size: 64))),
                 const SizedBox(height: 22),
                 const Reveal(
                   index: 1,
-                  child: Center(child: Text('Welcome Back', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w700))),
+                  child: Center(child: Tr('Welcome Back', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w700))),
                 ),
                 const SizedBox(height: 8),
                 Reveal(
                   index: 1,
-                  child: Text('Log in to your account using email\nor social networks',
+                  child: Tr('Log in to your account using email\nor social networks',
                       textAlign: TextAlign.center, style: TextStyle(fontSize: 12, color: pal.subtext, height: 1.5)),
                 ),
                 const SizedBox(height: 24),
@@ -78,7 +84,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       const Expanded(child: Divider()),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 12),
-                        child: Text('Or continue with social account', style: TextStyle(fontSize: 11, color: pal.subtext)),
+                        child: Tr('Or continue with social account', style: TextStyle(fontSize: 11, color: pal.subtext)),
                       ),
                       const Expanded(child: Divider()),
                     ],
@@ -89,10 +95,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 const SizedBox(height: 14),
                 Reveal(index: 6, child: AppTextField(controller: _password, label: 'Password', isPassword: true, validator: Validators.password)),
                 Align(
-                  alignment: Alignment.centerRight,
+                  alignment: AlignmentDirectional.centerEnd,
                   child: TextButton(
                     onPressed: () => context.snack('Password reset link sent (demo)'),
-                    child: const Text('Forgot Password ?', style: TextStyle(color: AppColors.primary, fontSize: 12)),
+                    child: const Tr('Forgot Password ?', style: TextStyle(color: AppColors.primary, fontSize: 12)),
                   ),
                 ),
                 const SizedBox(height: 10),
@@ -101,10 +107,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text("Didn't have an account? ", style: TextStyle(fontSize: 12)),
+                    const Tr("Didn't have an account? ", style: TextStyle(fontSize: 12)),
                     GestureDetector(
                       onTap: () => context.push(const SignUpScreen()),
-                      child: const Text('Register', style: TextStyle(color: AppColors.primary, fontSize: 12)),
+                      child: const Tr('Register', style: TextStyle(color: AppColors.primary, fontSize: 12)),
                     ),
                   ],
                 ),
@@ -136,7 +142,7 @@ class _SocialButton extends StatelessWidget {
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [icon, const SizedBox(width: 10), Text(label, style: const TextStyle(fontSize: 13.5, fontWeight: FontWeight.w500))],
+          children: [icon, const SizedBox(width: 10), Tr(label, style: const TextStyle(fontSize: 13.5, fontWeight: FontWeight.w500))],
         ),
       ),
     );

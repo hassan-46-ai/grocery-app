@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import '../core/l10n.dart';
+import '../core/app_image.dart';
+import '../data/models.dart';
+import 'map_picker_screen.dart';
 import 'package:provider/provider.dart';
 
 import '../core/animations.dart';
@@ -25,6 +29,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   late final _phone = TextEditingController(text: _user.phone);
   late final _address = TextEditingController(text: _user.address);
   late String _avatar = _user.avatar;
+  late double? _lat = _user.lat;
+  late double? _lng = _user.lng;
 
   Future<void> _pickAvatar() async {
     final picked = await showModalBottomSheet<String>(
@@ -37,7 +43,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text('Choose your avatar', style: TextStyle(fontSize: 17, fontWeight: FontWeight.w700)),
+              const Tr('Choose your avatar', style: TextStyle(fontSize: 17, fontWeight: FontWeight.w700)),
               const SizedBox(height: 16),
               Wrap(
                 spacing: 14,
@@ -63,6 +69,16 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     if (picked != null) setState(() => _avatar = picked);
   }
 
+  Future<void> _pickOnMap() async {
+    final r = await context.push<PickedLocation>(MapPickerScreen(initialLat: _lat, initialLng: _lng));
+    if (r == null) return;
+    setState(() {
+      _address.text = r.address;
+      _lat = r.lat;
+      _lng = r.lng;
+    });
+  }
+
   void _save() {
     if (!_formKey.currentState!.validate()) return;
     final state = context.read<AppState>();
@@ -72,6 +88,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       phone: _phone.text.trim(),
       address: _address.text.trim(),
       avatar: _avatar,
+      lat: _lat,
+      lng: _lng,
     ));
     context.snack('Profile updated');
     Navigator.pop(context);
@@ -88,7 +106,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Edit Profile')),
+      appBar: AppBar(title: const Tr('Edit Profile')),
       body: SafeArea(
         child: Column(
           children: [
@@ -109,6 +127,18 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       Reveal(index: 2, child: AppTextField(controller: _phone, label: 'Mobile Number', greenBorder: true, keyboardType: TextInputType.phone, validator: Validators.phone)),
                       const SizedBox(height: 12),
                       Reveal(index: 3, child: AppTextField(controller: _address, label: 'Enter Address', greenBorder: true, validator: Validators.required)),
+                      const SizedBox(height: 6),
+                      Reveal(
+                        index: 4,
+                        child: Align(
+                          alignment: AlignmentDirectional.centerStart,
+                          child: TextButton.icon(
+                            onPressed: _pickOnMap,
+                            icon: const Icon(Icons.map_outlined, color: AppColors.primary),
+                            label: const Tr('Pick on map', style: TextStyle(color: AppColors.primary, fontWeight: FontWeight.w600)),
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),

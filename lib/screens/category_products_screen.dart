@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '../core/l10n.dart';
+import '../core/app_image.dart';
 import 'package:provider/provider.dart';
 
 import '../core/animations.dart';
@@ -28,12 +30,12 @@ class _CategoryProductsScreenState extends State<CategoryProductsScreen> {
     final state = context.read<AppState>();
     var products = state.productsIn(widget.category.name, _sub);
     if (_query.isNotEmpty) {
-      products = state.productsIn(widget.category.name, _sub).where((p) => p.name.toLowerCase().contains(_query.toLowerCase())).toList();
+      products = state.productsIn(widget.category.name, _sub).where((p) => p.name.toLowerCase().contains(_query.toLowerCase()) || p.nameAr.contains(_query)).toList();
     }
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.category.name),
+        title: Text(widget.category.nameIn(context)),
         actions: [
           IconButton(
             icon: AnimatedSwitcher(
@@ -58,7 +60,7 @@ class _CategoryProductsScreenState extends State<CategoryProductsScreen> {
                     child: TextField(
                       autofocus: true,
                       onChanged: (v) => setState(() => _query = v),
-                      decoration: const InputDecoration(hintText: 'Search in this category', prefixIcon: Icon(Icons.search)),
+                      decoration: InputDecoration(hintText: context.tr('Search in this category'), prefixIcon: const Icon(Icons.search)),
                     ),
                   )
                 : const SizedBox(width: double.infinity),
@@ -90,11 +92,11 @@ class _CategoryProductsScreenState extends State<CategoryProductsScreen> {
                                   height: 54,
                                   width: double.infinity,
                                   decoration: BoxDecoration(color: pal.tile, borderRadius: BorderRadius.circular(10)),
-                                  child: Center(child: Text(sub.emoji, style: const TextStyle(fontSize: 28))),
+                                  child: Center(child: EmojiImage(folder: 'subcategories', name: slugify(sub.name), emoji: sub.emoji, size: 40)),
                                 ),
                                 const SizedBox(height: 6),
                                 Text(
-                                  sub.name,
+                                  sub.nameIn(context),
                                   textAlign: TextAlign.center,
                                   style: TextStyle(fontSize: 10.5, fontWeight: _sub == sub.name ? FontWeight.w700 : FontWeight.w400),
                                 ),

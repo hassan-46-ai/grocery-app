@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import '../core/l10n.dart';
+import '../core/app_image.dart';
+import '../widgets/language_widgets.dart';
 import 'package:provider/provider.dart';
 
 import '../core/animations.dart';
@@ -47,7 +50,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   Widget build(BuildContext context) {
     final pal = context.pal;
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(actions: const [LangToggle(), SizedBox(width: 12)]),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 8),
@@ -58,11 +61,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
               children: [
                 const Reveal(index: 0, child: Center(child: AppLogo(size: 64))),
                 const SizedBox(height: 22),
-                const Reveal(index: 1, child: Center(child: Text('Create New Account', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w700)))),
+                const Reveal(index: 1, child: Center(child: Tr('Create New Account', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w700)))),
                 const SizedBox(height: 8),
                 Reveal(
                   index: 1,
-                  child: Text('Set up your username and password.\nYou can always change it later.',
+                  child: Tr('Set up your username and password.\nYou can always change it later.',
                       textAlign: TextAlign.center, style: TextStyle(fontSize: 12, color: pal.subtext, height: 1.5)),
                 ),
                 const SizedBox(height: 24),
@@ -90,10 +93,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text('Already have an account? ', style: TextStyle(fontSize: 12)),
+                    const Tr('Already have an account? ', style: TextStyle(fontSize: 12)),
                     GestureDetector(
                       onTap: () => Navigator.pop(context),
-                      child: const Text('Log in', style: TextStyle(color: AppColors.primary, fontSize: 12)),
+                      child: const Tr('Log in', style: TextStyle(color: AppColors.primary, fontSize: 12)),
                     ),
                   ],
                 ),

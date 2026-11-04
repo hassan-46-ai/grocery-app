@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import '../core/l10n.dart';
+import '../core/app_image.dart';
+import '../data/models.dart';
 import 'package:provider/provider.dart';
 
 import '../core/animations.dart';
@@ -16,7 +19,7 @@ class OrdersScreen extends StatelessWidget {
     final pal = context.pal;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('My Orders')),
+      appBar: AppBar(title: const Tr('My Orders')),
       body: orders.isEmpty
           ? const EmptyState(emoji: '📦', title: 'No orders yet', subtitle: 'Your placed orders will appear here.')
           : ListView.builder(
@@ -36,12 +39,12 @@ class OrdersScreen extends StatelessWidget {
                     child: ExpansionTile(
                       shape: const Border(),
                       collapsedShape: const Border(),
-                      title: Text('Order #${o.id}', style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 14)),
-                      subtitle: Text('${formatDate(o.date)} · ${money(o.total)}', style: TextStyle(color: pal.subtext, fontSize: 12)),
+                      title: Text(context.tr('Order #{id}', {'id': o.id}), style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 14)),
+                      subtitle: Text('${formatDate(context, o.date)} · ${money(context, o.total)}', style: TextStyle(color: pal.subtext, fontSize: 12)),
                       trailing: Container(
                         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                         decoration: BoxDecoration(color: pal.primarySoft, borderRadius: BorderRadius.circular(8)),
-                        child: const Text('Placed', style: TextStyle(color: AppColors.primary, fontWeight: FontWeight.w600, fontSize: 11)),
+                        child: const Tr('Placed', style: TextStyle(color: AppColors.primary, fontWeight: FontWeight.w600, fontSize: 11)),
                       ),
                       childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
                       children: [
@@ -49,15 +52,15 @@ class OrdersScreen extends StatelessWidget {
                           ListTile(
                             dense: true,
                             contentPadding: EdgeInsets.zero,
-                            leading: Text(item.product.emoji, style: const TextStyle(fontSize: 26)),
-                            title: Text(item.product.name),
-                            subtitle: Text('${item.qty} × ${money(item.product.price)}'),
-                            trailing: Text(money(item.total), style: const TextStyle(fontWeight: FontWeight.w600)),
+                            leading: ProductImage(item.product, size: 38),
+                            title: Text(item.product.nameIn(context)),
+                            subtitle: Text('${item.qty} × ${money(context, item.product.price)}'),
+                            trailing: Text(money(context, item.total), style: const TextStyle(fontWeight: FontWeight.w600)),
                           ),
                         const Divider(),
-                        Align(alignment: Alignment.centerLeft, child: Text('Deliver to: ${o.address}', style: const TextStyle(fontSize: 12.5))),
+                        Align(alignment: AlignmentDirectional.centerStart, child: Text(context.tr('Deliver to: {a}', {'a': o.address}), style: const TextStyle(fontSize: 12.5))),
                         const SizedBox(height: 4),
-                        Align(alignment: Alignment.centerLeft, child: Text('Payment: ${o.payment}', style: const TextStyle(fontSize: 12.5))),
+                        Align(alignment: AlignmentDirectional.centerStart, child: Text(context.tr('Payment: {p}', {'p': context.tr(o.payment)}), style: const TextStyle(fontSize: 12.5))),
                       ],
                     ),
                   ),

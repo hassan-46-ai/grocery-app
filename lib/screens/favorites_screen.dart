@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import '../core/l10n.dart';
+import '../core/app_image.dart';
+import '../data/models.dart';
 import 'package:provider/provider.dart';
 
 import '../core/utils.dart';
@@ -15,7 +18,7 @@ class FavoritesScreen extends StatelessWidget {
     final favs = s.favoriteProducts;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Favourites')),
+      appBar: AppBar(title: const Tr('Favourites')),
       body: favs.isEmpty
           ? const EmptyState(emoji: '💚', title: 'No favourites yet', subtitle: 'Tap the heart on any product to save it here.')
           : Column(
@@ -27,7 +30,7 @@ class FavoritesScreen extends StatelessWidget {
                     label: 'Add All To Cart',
                     onPressed: () {
                       s.addAllFavoritesToCart();
-                      context.snack('${favs.length} items added to cart');
+                      context.snack(context.tr('{n} items added to cart', {'n': '${favs.length}'}));
                     },
                   ),
                 ),

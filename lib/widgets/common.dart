@@ -1,21 +1,51 @@
 import 'package:flutter/material.dart';
+import '../core/l10n.dart';
+import '../core/app_image.dart';
+import '../data/models.dart';
 
 import '../core/animations.dart';
 import '../core/theme.dart';
 
-/// The green "R" brand mark (two-tone).
+/// Hammad Stores brand mark. Put your own logo at assets/brand/logo.png to replace it.
 class AppLogo extends StatelessWidget {
-  const AppLogo({super.key, this.size = 72});
+  const AppLogo({super.key, this.size = 72, this.showName = true});
+  final double size;
+  final bool showName;
+
+  @override
+  Widget build(BuildContext context) {
+    final path = AssetCatalog.find('brand', 'logo');
+    final mark = path != null
+        ? Image.asset(path, height: size * 1.1, fit: BoxFit.contain, errorBuilder: (_, __, ___) => _LogoMark(size: size))
+        : _LogoMark(size: size);
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        mark,
+        if (showName) ...[
+          SizedBox(height: size * 0.2),
+          Tr('Hammad Stores', style: TextStyle(fontSize: size * 0.3, fontWeight: FontWeight.w800, color: context.pal.text)),
+        ],
+      ],
+    );
+  }
+}
+
+class _LogoMark extends StatelessWidget {
+  const _LogoMark({required this.size});
   final double size;
 
   @override
   Widget build(BuildContext context) {
-    TextStyle style(Color c) => TextStyle(fontSize: size, fontWeight: FontWeight.w900, color: c, height: 1);
-    return Stack(
-      children: [
-        Transform.translate(offset: Offset(-size * 0.05, 0), child: Text('R', style: style(AppColors.primaryDark))),
-        Text('R', style: style(AppColors.primary)),
-      ],
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [AppColors.primary, AppColors.primaryDark]),
+        borderRadius: BorderRadius.circular(size * 0.3),
+        boxShadow: [BoxShadow(color: AppColors.primary.withOpacity(0.35), blurRadius: size * 0.3, offset: Offset(0, size * 0.1))],
+      ),
+      child: Icon(Icons.storefront_rounded, color: Colors.white, size: size * 0.55),
     );
   }
 }
@@ -37,7 +67,7 @@ class PrimaryButton extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               if (icon != null) ...[Icon(icon, size: 20), const SizedBox(width: 8)],
-              Text(label),
+              Tr(label),
             ],
           ),
         ),
@@ -81,11 +111,16 @@ class _AppTextFieldState extends State<AppTextField> {
     );
     return TextFormField(
       controller: widget.controller,
-      validator: widget.validator,
+      validator: widget.validator == null
+          ? null
+          : (v) {
+              final e = widget.validator!(v);
+              return e == null ? null : context.tr(e);
+            },
       keyboardType: widget.keyboardType,
       obscureText: widget.isPassword && _hidden,
       decoration: InputDecoration(
-        labelText: widget.label,
+        labelText: context.tr(widget.label),
         prefixIcon: widget.icon == null ? null : Icon(widget.icon, color: context.pal.subtext),
         enabledBorder: widget.greenBorder ? greenBorder : null,
         suffixIcon: widget.isPassword
@@ -128,11 +163,11 @@ class SectionHeader extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(title, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
+          Tr(title, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
           if (actionLabel != null)
             GestureDetector(
               onTap: onAction,
-              child: Text(actionLabel!, style: const TextStyle(color: AppColors.primary, fontSize: 13, fontWeight: FontWeight.w500)),
+              child: Tr(actionLabel!, style: const TextStyle(color: AppColors.primary, fontSize: 13, fontWeight: FontWeight.w500)),
             ),
         ],
       ),
@@ -155,9 +190,9 @@ class EmptyState extends StatelessWidget {
             children: [
               Text(emoji, style: const TextStyle(fontSize: 64)),
               const SizedBox(height: 16),
-              Text(title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
+              Tr(title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
               const SizedBox(height: 8),
-              Text(subtitle, textAlign: TextAlign.center, style: TextStyle(color: context.pal.subtext)),
+              Tr(subtitle, textAlign: TextAlign.center, style: TextStyle(color: context.pal.subtext)),
             ],
           ),
         ),

@@ -18,6 +18,7 @@ class AppState extends ChangeNotifier {
   bool loggedIn = false;
   UserProfile user = const UserProfile();
   ThemeMode themeMode = ThemeMode.system;
+  String lang = 'en';
   int tab = 0;
   int payment = 0;
 
@@ -32,6 +33,8 @@ class AppState extends ChangeNotifier {
     onboardingSeen = _prefs.getBool('onboarding') ?? false;
     loggedIn = _prefs.getBool('loggedIn') ?? false;
     payment = _prefs.getInt('payment') ?? 0;
+    lang = _prefs.getString('lang') ??
+        (WidgetsBinding.instance.platformDispatcher.locale.languageCode == 'ar' ? 'ar' : 'en');
     final u = _prefs.getString('user');
     if (u != null) user = UserProfile.fromJson(jsonDecode(u));
     final t = _prefs.getString('theme');
@@ -50,6 +53,12 @@ class AppState extends ChangeNotifier {
   void setThemeMode(ThemeMode m) {
     themeMode = m;
     _prefs.setString('theme', m.name);
+    notifyListeners();
+  }
+
+  void setLanguage(String code) {
+    lang = code;
+    _prefs.setString('lang', code);
     notifyListeners();
   }
 
@@ -117,7 +126,11 @@ class AppState extends ChangeNotifier {
   List<Product> get filteredProducts {
     final q = query.trim().toLowerCase();
     final list = allProducts.where((p) {
-      final matchesQuery = q.isEmpty || p.name.toLowerCase().contains(q) || p.category.toLowerCase().contains(q);
+      final matchesQuery = q.isEmpty ||
+          p.name.toLowerCase().contains(q) ||
+          p.nameAr.contains(q) ||
+          p.category.toLowerCase().contains(q) ||
+          p.categoryAr.contains(q);
       final matchesCategory = filter.categories.isEmpty || filter.categories.contains(p.category);
       return matchesQuery && matchesCategory && p.price <= filter.maxPrice && p.rating >= filter.minRating;
     }).toList();
@@ -198,7 +211,7 @@ class AppState extends ChangeNotifier {
 
   Order placeOrder({required String address, required String payment, required double total}) {
     final order = Order(
-      id: 'GR${DateTime.now().millisecondsSinceEpoch % 100000}',
+      id: 'HS${DateTime.now().millisecondsSinceEpoch % 100000}',
       items: cartItems,
       total: total,
       date: DateTime.now(),

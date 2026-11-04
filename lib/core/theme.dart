@@ -76,14 +76,17 @@ extension PaletteX on BuildContext {
   AppPalette get pal => Theme.of(this).extension<AppPalette>()!;
 }
 
-final lightTheme = _build(Brightness.light);
-final darkTheme = _build(Brightness.dark);
+final _themes = <String, ThemeData>{};
 
-ThemeData _build(Brightness b) {
+/// Cached theme per brightness + language (Arabic uses the Cairo font).
+ThemeData appTheme(Brightness b, bool ar) => _themes.putIfAbsent('${b.name}-$ar', () => _build(b, ar));
+
+ThemeData _build(Brightness b, bool ar) {
   final isDark = b == Brightness.dark;
   final pal = isDark ? AppPalette.dark : AppPalette.light;
   final base = ThemeData(brightness: b, useMaterial3: true);
-  final textTheme = GoogleFonts.poppinsTextTheme(base.textTheme).apply(bodyColor: pal.text, displayColor: pal.text);
+  final fontTheme = ar ? GoogleFonts.cairoTextTheme(base.textTheme) : GoogleFonts.poppinsTextTheme(base.textTheme);
+  final textTheme = fontTheme.apply(bodyColor: pal.text, displayColor: pal.text);
 
   OutlineInputBorder border(Color c, [double w = 1]) =>
       OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: c, width: w));

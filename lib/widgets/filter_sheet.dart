@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '../core/l10n.dart';
+import '../core/app_image.dart';
 import 'package:provider/provider.dart';
 
 import '../core/theme.dart';
@@ -32,7 +34,7 @@ class _FilterSheetState extends State<_FilterSheet> {
 
   Widget _label(String t) => Padding(
         padding: const EdgeInsets.only(top: 18, bottom: 8),
-        child: Text(t, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
+        child: Tr(t, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
       );
 
   @override
@@ -55,7 +57,7 @@ class _FilterSheetState extends State<_FilterSheet> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text('Filters', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700)),
+                const Tr('Filters', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700)),
                 IconButton(onPressed: () => Navigator.pop(context), icon: const Icon(Icons.close)),
               ],
             ),
@@ -66,7 +68,7 @@ class _FilterSheetState extends State<_FilterSheet> {
               children: [
                 for (final c in categories)
                   FilterChip(
-                    label: Text('${c.emoji} ${c.name}', style: const TextStyle(fontSize: 12)),
+                    label: Text('${c.emoji} ${c.nameIn(context)}', style: const TextStyle(fontSize: 12)),
                     selected: f.categories.contains(c.name),
                     selectedColor: soft,
                     showCheckmark: false,
@@ -78,12 +80,12 @@ class _FilterSheetState extends State<_FilterSheet> {
                   ),
               ],
             ),
-            _label('Max price: ${money(f.maxPrice)}'),
+            _label(context.tr('Max price: {p}', {'p': money(context, f.maxPrice)})),
             Slider(
               value: f.maxPrice,
-              min: 1,
+              min: 10,
               max: ProductFilter.maxPriceLimit,
-              divisions: 19,
+              divisions: 39,
               activeColor: AppColors.primary,
               onChanged: (v) => setState(() => f = f.copyWith(maxPrice: v)),
             ),
@@ -93,7 +95,7 @@ class _FilterSheetState extends State<_FilterSheet> {
               children: [
                 for (final r in [0.0, 4.0, 4.3, 4.6])
                   ChoiceChip(
-                    label: Text(r == 0 ? 'Any' : '$r ★+'),
+                    label: Text(r == 0 ? context.tr('Any') : '$r ★+'),
                     selected: f.minRating == r,
                     selectedColor: soft,
                     showCheckmark: false,
@@ -107,7 +109,7 @@ class _FilterSheetState extends State<_FilterSheet> {
               children: [
                 for (final e in sortLabels.entries)
                   ChoiceChip(
-                    label: Text(e.value),
+                    label: Tr(e.value),
                     selected: f.sort == e.key,
                     selectedColor: soft,
                     showCheckmark: false,
@@ -127,7 +129,7 @@ class _FilterSheetState extends State<_FilterSheet> {
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                     ),
                     onPressed: () => setState(() => f = const ProductFilter()),
-                    child: const Text('Reset'),
+                    child: const Tr('Reset'),
                   ),
                 ),
                 const SizedBox(width: 12),

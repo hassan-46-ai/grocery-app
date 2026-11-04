@@ -1,22 +1,30 @@
+/// "Fresh Milk" -> "fresh_milk" (used as image file name).
+String slugify(String s) =>
+    s.toLowerCase().replaceAll(RegExp(r'[^a-z0-9]+'), '_').replaceAll(RegExp(r'^_+|_+$'), '');
+
 class SubCategory {
   final String name;
+  final String nameAr;
   final String emoji;
-  const SubCategory(this.name, this.emoji);
+  const SubCategory(this.name, this.nameAr, this.emoji);
 }
 
 class Category {
   final String name;
+  final String nameAr;
   final String emoji;
   final List<SubCategory> subs;
-  const Category(this.name, this.emoji, this.subs);
+  const Category(this.name, this.nameAr, this.emoji, this.subs);
 }
 
 class Product {
   final int id;
   final String name;
+  final String nameAr;
   final String emoji;
   final String weight;
   final String category;
+  final String categoryAr;
   final String sub;
   final double price;
   final double oldPrice;
@@ -25,19 +33,21 @@ class Product {
   const Product({
     required this.id,
     required this.name,
+    required this.nameAr,
     required this.emoji,
     required this.weight,
     required this.category,
+    required this.categoryAr,
     required this.sub,
     required this.price,
     required this.oldPrice,
     required this.rating,
   });
 
-  int get discountPercent => oldPrice > price ? (((oldPrice - price) / oldPrice) * 100).round() : 0;
+  /// File name (without extension) of this product's photo in assets/products/.
+  String get imageKey => slugify(name);
 
-  String get description =>
-      'Fresh, high quality $name carefully selected and packed for you. Stored with care and delivered straight to your door.';
+  int get discountPercent => oldPrice > price ? (((oldPrice - price) / oldPrice) * 100).round() : 0;
 }
 
 class CartItem {
@@ -71,19 +81,23 @@ class UserProfile {
   final String phone;
   final String address;
   final String avatar;
+  final double? lat;
+  final double? lng;
 
-  const UserProfile({this.name = '', this.email = '', this.phone = '', this.address = '', this.avatar = '🙂'});
+  const UserProfile({this.name = '', this.email = '', this.phone = '', this.address = '', this.avatar = '🙂', this.lat, this.lng});
 
-  UserProfile copyWith({String? name, String? email, String? phone, String? address, String? avatar}) => UserProfile(
+  UserProfile copyWith({String? name, String? email, String? phone, String? address, String? avatar, double? lat, double? lng}) => UserProfile(
         name: name ?? this.name,
         email: email ?? this.email,
         phone: phone ?? this.phone,
         address: address ?? this.address,
         avatar: avatar ?? this.avatar,
+        lat: lat ?? this.lat,
+        lng: lng ?? this.lng,
       );
 
   Map<String, dynamic> toJson() =>
-      {'name': name, 'email': email, 'phone': phone, 'address': address, 'avatar': avatar};
+      {'name': name, 'email': email, 'phone': phone, 'address': address, 'avatar': avatar, 'lat': lat, 'lng': lng};
 
   factory UserProfile.fromJson(Map<String, dynamic> j) => UserProfile(
         name: j['name'] ?? '',
@@ -91,13 +105,15 @@ class UserProfile {
         phone: j['phone'] ?? '',
         address: j['address'] ?? '',
         avatar: j['avatar'] ?? '🙂',
+        lat: (j['lat'] as num?)?.toDouble(),
+        lng: (j['lng'] as num?)?.toDouble(),
       );
 }
 
 enum SortBy { none, priceLow, priceHigh, rating }
 
 class ProductFilter {
-  static const maxPriceLimit = 20.0;
+  static const maxPriceLimit = 400.0;
 
   final Set<String> categories;
   final double maxPrice;

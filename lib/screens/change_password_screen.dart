@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import '../core/l10n.dart';
+import '../core/app_image.dart';
+import '../data/models.dart';
 
 import '../core/animations.dart';
 import '../core/utils.dart';
@@ -35,7 +38,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Change Password')),
+      appBar: AppBar(title: const Tr('Change Password')),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Form(

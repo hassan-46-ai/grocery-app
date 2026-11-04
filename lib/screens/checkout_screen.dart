@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import '../core/l10n.dart';
+import '../core/app_image.dart';
+import '../data/models.dart';
+import 'map_picker_screen.dart';
 import 'package:provider/provider.dart';
 
 import '../core/animations.dart';
@@ -18,7 +22,7 @@ class CheckoutScreen extends StatefulWidget {
 }
 
 class _CheckoutScreenState extends State<CheckoutScreen> {
-  static const _deliveryOptions = [('Standard · 30-45 min', 3.0), ('Express · 15-20 min', 6.0)];
+  static const _deliveryOptions = [('Standard · 30-45 min', 30.0), ('Express · 15-20 min', 60.0)];
   static const _promoCode = 'FRESH10';
 
   int _delivery = 0;
@@ -64,7 +68,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     final total = subtotal - discount + fee;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Checkout')),
+      appBar: AppBar(title: const Tr('Checkout')),
       body: ListView(
         padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
         children: [
@@ -74,7 +78,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
             icon: Icons.location_on_outlined,
             title: s.user.address.isEmpty ? 'No address set' : s.user.address,
             subtitle: s.user.phone.isEmpty ? null : s.user.phone,
-            trailing: TextButton(onPressed: () => context.push(const EditProfileScreen()), child: const Text('Change', style: TextStyle(color: AppColors.primary))),
+            trailing: TextButton(onPressed: () => pickDeliveryLocation(context), child: const Tr('Change', style: TextStyle(color: AppColors.primary))),
           ),
           const _Title('Delivery method'),
           for (var i = 0; i < _deliveryOptions.length; i++)
@@ -82,7 +86,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               selected: _delivery == i,
               icon: Icons.delivery_dining_outlined,
               title: _deliveryOptions[i].$1,
-              trailing: Text(money(_deliveryOptions[i].$2), style: const TextStyle(fontWeight: FontWeight.w700)),
+              trailing: Text(money(context, _deliveryOptions[i].$2), style: const TextStyle(fontWeight: FontWeight.w700)),
               onTap: () => setState(() => _delivery = i),
             ),
           const _Title('Payment method'),
@@ -96,20 +100,20 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           const _Title('Promo code'),
           Row(
             children: [
-              Expanded(child: TextField(controller: _promo, decoration: const InputDecoration(hintText: 'Try FRESH10'))),
+              Expanded(child: TextField(controller: _promo, decoration: InputDecoration(hintText: context.tr('Try FRESH10')))),
               const SizedBox(width: 10),
               SizedBox(
                 width: 96,
-                child: ElevatedButton(onPressed: _applyPromo, style: ElevatedButton.styleFrom(minimumSize: const Size.fromHeight(52)), child: const Text('Apply')),
+                child: ElevatedButton(onPressed: _applyPromo, style: ElevatedButton.styleFrom(minimumSize: const Size.fromHeight(52)), child: const Tr('Apply')),
               ),
             ],
           ),
           const SizedBox(height: 22),
-          _Row('Subtotal', money(subtotal)),
-          if (_discountRate > 0) _Row('Discount', '-${money(discount)}', color: AppColors.primary),
-          _Row('Delivery', money(fee)),
+          _Row('Subtotal', money(context, subtotal)),
+          if (_discountRate > 0) _Row('Discount', '-${money(context, discount)}', color: AppColors.primary),
+          _Row('Delivery', money(context, fee)),
           const Divider(height: 28),
-          _Row('Total', money(total), bold: true),
+          _Row('Total', money(context, total), bold: true),
           const SizedBox(height: 22),
           PrimaryButton(label: 'Place Order', onPressed: () => _placeOrder(total)),
         ],
@@ -125,7 +129,7 @@ class _Title extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Padding(
         padding: const EdgeInsets.only(top: 18, bottom: 10),
-        child: Text(text, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700)),
+        child: Tr(text, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700)),
       );
 }
 
@@ -160,7 +164,7 @@ class _Tile extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(title, style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 13.5)),
+                  Tr(title, style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 13.5)),
                   if (subtitle != null) Text(subtitle!, style: TextStyle(color: pal.subtext, fontSize: 12)),
                 ],
               ),
@@ -188,9 +192,9 @@ class _Row extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(label, style: style),
+          Tr(label, style: style),
           const SizedBox(width: 16),
-          Flexible(child: Text(value, textAlign: TextAlign.end, style: style)),
+          Flexible(child: Tr(value, textAlign: TextAlign.end, style: style)),
         ],
       ),
     );
@@ -211,19 +215,19 @@ class _ApproveSheet extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Approve your order', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700)),
+            const Tr('Approve your order', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700)),
             const SizedBox(height: 6),
-            Text('Please review the details before confirming.', style: TextStyle(color: context.pal.subtext, fontSize: 13)),
+            Tr('Please review the details before confirming.', style: TextStyle(color: context.pal.subtext, fontSize: 13)),
             const SizedBox(height: 20),
             _Row('Deliver to', address),
             _Row('Payment', payment),
-            _Row('Total', money(total), bold: true),
+            _Row('Total', money(context, total), bold: true),
             const SizedBox(height: 22),
             PrimaryButton(label: 'Approve & Place Order', onPressed: () => Navigator.pop(context, true)),
             const SizedBox(height: 6),
             TextButton(
               onPressed: () => Navigator.pop(context, false),
-              child: Center(child: Text('Cancel', style: TextStyle(color: context.pal.text))),
+              child: Center(child: Tr('Cancel', style: TextStyle(color: context.pal.text))),
             ),
           ],
         ),

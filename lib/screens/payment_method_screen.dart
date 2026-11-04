@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import '../core/l10n.dart';
+import '../core/app_image.dart';
+import '../data/models.dart';
 import 'package:provider/provider.dart';
 
 import '../core/animations.dart';
@@ -16,7 +19,7 @@ class PaymentMethodScreen extends StatelessWidget {
     const icons = [Icons.payments_outlined, Icons.credit_card, Icons.account_balance_wallet_outlined];
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Payment Method')),
+      appBar: AppBar(title: const Tr('Payment Method')),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
@@ -38,7 +41,7 @@ class PaymentMethodScreen extends StatelessWidget {
                     children: [
                       Icon(icons[i], color: s.payment == i ? AppColors.primary : pal.subtext),
                       const SizedBox(width: 14),
-                      Expanded(child: Text(paymentMethods[i], style: const TextStyle(fontWeight: FontWeight.w500))),
+                      Expanded(child: Tr(paymentMethods[i], style: const TextStyle(fontWeight: FontWeight.w500))),
                       AnimatedOpacity(
                         duration: const Duration(milliseconds: 200),
                         opacity: s.payment == i ? 1 : 0,

@@ -14,7 +14,7 @@ class FadeSlideTransitionsBuilder extends PageTransitionsBuilder {
     return FadeTransition(
       opacity: curved,
       child: SlideTransition(
-        position: Tween(begin: const Offset(0.07, 0), end: Offset.zero).animate(curved),
+        position: Tween(begin: Offset(Directionality.of(context) == TextDirection.rtl ? -0.07 : 0.07, 0), end: Offset.zero).animate(curved),
         child: child,
       ),
     );

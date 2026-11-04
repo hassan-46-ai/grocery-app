@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import '../core/l10n.dart';
+import '../core/app_image.dart';
+import '../data/models.dart';
 
 import '../core/animations.dart';
 import '../data/catalog.dart';
@@ -10,7 +13,7 @@ class CategoriesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('All Categories')),
+      appBar: AppBar(title: const Tr('All Categories')),
       body: GridView.builder(
         padding: const EdgeInsets.all(16),
         itemCount: categories.length,

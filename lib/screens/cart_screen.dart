@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import '../core/l10n.dart';
+import '../core/app_image.dart';
+import '../data/models.dart';
 import 'package:provider/provider.dart';
 
 import '../core/animations.dart';
@@ -18,7 +21,7 @@ class CartScreen extends StatelessWidget {
     final items = s.cartItems;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('My Cart')),
+      appBar: AppBar(title: const Tr('My Cart')),
       body: items.isEmpty
           ? const EmptyState(emoji: '🛒', title: 'Your cart is empty', subtitle: 'Add some fresh groceries to get started.')
           : Column(
@@ -38,8 +41,8 @@ class CartScreen extends StatelessWidget {
                           onDismissed: (_) => s.removeFromCart(p.id),
                           background: Container(
                             margin: const EdgeInsets.only(bottom: 12),
-                            alignment: Alignment.centerRight,
-                            padding: const EdgeInsets.only(right: 22),
+                            alignment: AlignmentDirectional.centerEnd,
+                            padding: const EdgeInsetsDirectional.only(end: 22),
                             decoration: BoxDecoration(color: AppColors.danger, borderRadius: BorderRadius.circular(14)),
                             child: const Icon(Icons.delete_outline, color: Colors.white),
                           ),
@@ -58,21 +61,21 @@ class CartScreen extends StatelessWidget {
                                   width: 72,
                                   height: 72,
                                   decoration: BoxDecoration(color: pal.tile, borderRadius: BorderRadius.circular(10)),
-                                  child: Center(child: Text(p.emoji, style: const TextStyle(fontSize: 38))),
+                                  child: Center(child: ProductImage(p, size: 56)),
                                 ),
                                 const SizedBox(width: 12),
                                 Expanded(
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      Text(p.name, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
-                                      Text(p.weight, style: TextStyle(color: pal.subtext, fontSize: 11)),
+                                      Text(p.nameIn(context), maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+                                      Text(p.weightIn(context), style: TextStyle(color: pal.subtext, fontSize: 11)),
                                       const SizedBox(height: 8),
                                       QtyControl(qty: item.qty, onChanged: (v) => s.setQty(p.id, v)),
                                     ],
                                   ),
                                 ),
-                                Text(money(item.total), style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700)),
+                                Text(money(context, item.total), style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700)),
                               ],
                             ),
                           ),
@@ -92,13 +95,13 @@ class CartScreen extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             const SizedBox(width: 4),
-                            const Text('Go to Checkout'),
+                            const Tr('Go to Checkout'),
                             Container(
                               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                               decoration: BoxDecoration(color: Colors.black.withOpacity(0.15), borderRadius: BorderRadius.circular(8)),
                               child: AnimatedSwitcher(
                                 duration: const Duration(milliseconds: 250),
-                                child: Text(money(s.cartTotal), key: ValueKey(s.cartTotal), style: const TextStyle(fontSize: 13)),
+                                child: Text(money(context, s.cartTotal), key: ValueKey(s.cartTotal), style: const TextStyle(fontSize: 13)),
                               ),
                             ),
                           ],

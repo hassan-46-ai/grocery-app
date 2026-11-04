@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import '../core/l10n.dart';
+import '../core/app_image.dart';
+import '../data/models.dart';
+import 'map_picker_screen.dart';
 import 'package:provider/provider.dart';
 
 import '../core/animations.dart';
@@ -56,16 +60,16 @@ class _Header extends StatelessWidget {
         const SizedBox(width: 8),
         Expanded(
           child: TapScale(
-            onTap: () => context.push(const EditProfileScreen()),
+            onTap: () => pickDeliveryLocation(context),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Row(children: [
-                  Text('Home', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                  Tr('Home', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
                   Icon(Icons.keyboard_arrow_down, size: 20),
                 ]),
                 Text(
-                  s.user.address.isEmpty ? 'Tap to add your address' : s.user.address,
+                  s.user.address.isEmpty ? context.tr('Tap to add your address') : s.user.address,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(fontSize: 10.5, color: pal.subtext),
@@ -119,7 +123,7 @@ class _SearchRowState extends State<_SearchRow> {
             controller: _controller,
             onChanged: state.setQuery,
             decoration: InputDecoration(
-              hintText: 'Search',
+              hintText: context.tr('Search'),
               filled: true,
               fillColor: pal.tile,
               border: none,
@@ -159,7 +163,7 @@ class _Results extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SectionHeader(title: 'Results (${results.length})', actionLabel: 'Clear', onAction: s.clearSearch),
+        SectionHeader(title: context.tr('Results ({n})', {'n': '${results.length}'}), actionLabel: 'Clear', onAction: s.clearSearch),
         if (results.isEmpty)
           const Padding(
             padding: EdgeInsets.only(top: 40),
@@ -223,7 +227,7 @@ class _PromoBanner extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('World Food Festival,\nBring the world to\nyour Kitchen!',
+                const Tr('World Food Festival,\nBring the world to\nyour Kitchen!',
                     style: TextStyle(fontSize: 14.5, fontWeight: FontWeight.w700, height: 1.3)),
                 const SizedBox(height: 14),
                 SizedBox(
@@ -232,7 +236,7 @@ class _PromoBanner extends StatelessWidget {
                   child: ElevatedButton(
                     onPressed: () => context.push(const CategoriesScreen()),
                     style: ElevatedButton.styleFrom(minimumSize: const Size(110, 38), textStyle: const TextStyle(fontSize: 12.5)),
-                    child: const Text('Shop Now'),
+                    child: const Tr('Shop Now'),
                   ),
                 ),
               ],

@@ -1,15 +1,24 @@
 import 'package:flutter/material.dart';
 
-const kCurrency = '\$';
+import 'l10n.dart';
 
-String money(double v) =>
-    v == v.roundToDouble() ? '$kCurrency${v.toInt()}' : '$kCurrency${v.toStringAsFixed(2)}';
+String _fmt(double v) {
+  final fixed = v == v.roundToDouble() ? v.toInt().toString() : v.toStringAsFixed(2);
+  final parts = fixed.split('.');
+  final whole = parts[0].replaceAllMapped(RegExp(r'\B(?=(\d{3})+(?!\d))'), (_) => ',');
+  return parts.length > 1 ? '$whole.${parts[1]}' : whole;
+}
 
-String formatDate(DateTime d) {
-  const m = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+/// Egyptian pounds: "EGP 1,250" (English) / "1,250 ج.م" (Arabic).
+String money(BuildContext c, double v) => c.isAr ? '${_fmt(v)} ج.م' : 'EGP ${_fmt(v)}';
+
+String formatDate(BuildContext c, DateTime d) {
+  const en = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const ar = ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'];
   final h = d.hour.toString().padLeft(2, '0');
   final min = d.minute.toString().padLeft(2, '0');
-  return '${d.day} ${m[d.month - 1]} ${d.year}, $h:$min';
+  final month = (c.isAr ? ar : en)[d.month - 1];
+  return '${d.day} $month ${d.year}, $h:$min';
 }
 
 extension Nav on BuildContext {
@@ -21,7 +30,7 @@ extension Nav on BuildContext {
   void snack(String msg) => ScaffoldMessenger.of(this)
     ..hideCurrentSnackBar()
     ..showSnackBar(SnackBar(
-      content: Text(msg),
+      content: Text(tr(msg)),
       behavior: SnackBarBehavior.floating,
       duration: const Duration(seconds: 2),
     ));
