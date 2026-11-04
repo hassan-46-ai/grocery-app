@@ -70,7 +70,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   Future<void> _pickOnMap() async {
-    final r = await context.push<PickedLocation>(MapPickerScreen(initialLat: _lat, initialLng: _lng));
+    final r = await openMapPicker(context, lat: _lat, lng: _lng);
     if (r == null) return;
     setState(() {
       _address.text = r.address;
