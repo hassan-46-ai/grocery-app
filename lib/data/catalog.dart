@@ -24,7 +24,7 @@ const _data = <(String, String, String, List<_Sub>)>[
     _Sub('Vegetables', 'خضروات', '🥦', [
       ('Packed Carrots', 'جزر معبأ', '🥕', '500 g', 22, 26),
       ('Green Pepper', 'فلفل أخضر', '🫑', '1 kg', 40, 48),
-      ('Chinese Cabbage', 'كرنب صيني', '🥬', '1 kg', 20, 25),
+      (' Cabbage', 'خس ', '🥬', '1 kg', 20, 25),
     ]),
   ]),
   ('Dairy & Bakery', 'ألبان ومخبوزات', '🥛', [
@@ -50,7 +50,7 @@ const _data = <(String, String, String, List<_Sub>)>[
       ('Schweppes Gold', 'شويبس جولد', '🥤', '250 ml', 28, 32),
     ]),
     _Sub('Water', 'مياه', '💧', [
-      ('Ogi Water', 'مياه أوجي', '💧', '1.5 L', 10, 12),
+      (' Water', 'مياه أو', '💧', '1.5 L', 10, 12),
     ]),
   ]),
   ('Snacks & Instant Food', 'سناكس وأطعمة سريعة', '🍿', [

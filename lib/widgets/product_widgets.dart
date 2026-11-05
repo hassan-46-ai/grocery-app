@@ -224,8 +224,7 @@ class CategoryTile extends StatelessWidget {
             child: Container(
               decoration: BoxDecoration(color: context.pal.tile, borderRadius: BorderRadius.circular(12)),
               child: Center(
-                child: EmojiImage(folder: 'categories', name: slugify(category.name), emoji: category.emoji, size: 52),
-              ),
+                child: CategoryImage(category, size: 52),              ),
             ),
           ),
           const SizedBox(height: 6),
