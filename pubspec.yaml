@@ -1,9 +1,10 @@
 name: fresh_cart
-description: Hammad Stores - grocery shopping app built with Flutter.
+description: Hammad Stores - grocery shopping app .
 publish_to: 'none'
 version: 1.0.0+1
 
 environment:
+
   sdk: '>=3.0.0 <4.0.0'
 
 dependencies:

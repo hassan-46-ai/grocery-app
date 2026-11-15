@@ -8,7 +8,7 @@ flutter pub get
 flutter run
 ```
 
-## Features
+## application features
 Animated splash, onboarding, login/sign up, home, categories with sub-category sidebar, product details,
 favourites, cart, checkout with approval + success dialog, orders, profile (name, phone, address, avatar),
 filters, search, **EGP prices**, **Arabic / English with RTL**, **dark / light mode**, **Google Maps location picker**.
