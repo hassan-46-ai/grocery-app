@@ -3,9 +3,8 @@
 ## Run
 ```bash
 cd fresh_cart
-flutter create .        # generates android/ios folders (keeps lib/, assets/ and pubspec.yaml)
+flutter create .        
 flutter pub get
-# follow MAPS_SETUP.md once (API key + permissions)
 flutter run
 ```
 
@@ -21,10 +20,3 @@ filters, search, **EGP prices**, **Arabic / English with RTL**, **dark / light m
 - `widgets/` reusable UI
 - `screens/` one file per screen
 - `assets/`  product photos (`assets/products/IMAGE_NAMES.txt` lists the exact file names)
-
-## Customising
-- Products / prices / Arabic names: `lib/data/catalog.dart` (price, old price in EGP).
-- Product photo: save `assets/products/<slug>.png|jpg|webp` (slug = English name in lowercase with `_`). Missing photos fall back to emoji.
-- Logo: save `assets/brand/logo.png`. Onboarding art: `assets/onboarding/1.png, 2.png, 3.png` (see IMAGE_NAMES.txt).
-- New text: write it in English in the code and add the Arabic line to `lib/core/strings_ar.dart`.
-- Demo promo code: `FRESH10`.
